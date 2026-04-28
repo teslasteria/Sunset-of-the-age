@@ -12,10 +12,13 @@ ICON_PATH = BASEDIR_PATH / 'assets' / 'play_icon.png'
 GIF_PATH = BASEDIR_PATH / 'assets' / 'main.gif'
 
 # scheme path
-SCHEME_PATH = BASEDIR_PATH / 'styles' / 'style.qss'
+SCHEME_PATH = BASEDIR_PATH / 'assets' / 'styles' / 'style.qss'
 
 # font path
-FONT_PATH = BASEDIR_PATH / 'fonts' / 'PixelOperator.ttf'
+FONT_PATH = BASEDIR_PATH / 'assets' / 'fonts' / 'PixelOperator.ttf'
+
+# Music file path
+MUSIC_PATH = BASEDIR_PATH / 'assets' / 'bryan-adams-run-to-you.mp3'
 
 
 def check_icon_path():
@@ -51,6 +54,17 @@ def check_font_path():
         return None
 
 
+def check_music_path():
+    '''checking valid path to font'''
+    if MUSIC_PATH.is_file():
+        return MUSIC_PATH
+    else:
+        print(f'GIF not found at: {MUSIC_PATH}')
+        print(f'Current working directory: {Path.cwd()}')
+
+        return None
+
+
 def check_scheme_path():
     '''checking valid path to scheme'''
     if SCHEME_PATH.is_file():
@@ -68,3 +82,4 @@ def check_is_valid_pathes():
     check_gif_path()
     check_font_path()
     check_scheme_path()
+    check_music_path()
