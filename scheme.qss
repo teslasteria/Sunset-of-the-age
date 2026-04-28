@@ -1,0 +1,37 @@
+QWidget {
+  background: #32195D;
+}
+
+QPushButton {
+    background: transparent;
+    color: #ffffff;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 4px;
+}
+
+QWidget#title_bar {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    /* border: 3px solid #5a5a5a; */
+    border-bottom: none;
+}
+
+QPushButton:hover { background-color: rgba(255, 255, 255, 0.15); }
+QPushButton:pressed { background-color: rgba(255, 255, 255, 0.25); }
+
+QPushButton#close_button:hover { background-color: rgba(209, 38, 38, 0.5); }
+QPushButton#close_button:pressed { background-color: rgba(209, 38, 38, 0.75); }
+
+QLabel {
+    color: #ffffff;
+    font-size: 18px; 
+    font-weight: 600;
+}
+
+QLabel#GIF {
+    /* border: 2px solid #ffffff;      
+    border-radius: 10px;  
+    margin: 0; */
+}
