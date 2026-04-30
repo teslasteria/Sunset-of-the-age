@@ -57,6 +57,7 @@ def check_font_path():
 def check_music_path():
     '''checking valid path to font'''
     if MUSIC_PATH.is_file():
+        print(f'PATH IS OK')
         return MUSIC_PATH
     else:
         print(f'GIF not found at: {MUSIC_PATH}')

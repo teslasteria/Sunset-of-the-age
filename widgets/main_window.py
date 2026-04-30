@@ -1,13 +1,13 @@
-from PyQt5.QtGui import QMovie, QIcon
-from PyQt5.QtWidgets import (
+from PyQt6.QtGui import QMovie, QIcon
+from PyQt6.QtWidgets import (
             QMainWindow, 
             QWidget, 
             QVBoxLayout, 
             QHBoxLayout, 
             QPushButton, 
             QLabel)
-from PyQt5.QtCore import QUrl, Qt, QPoint
-from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer, QAudioOutput
+from PyQt6.QtCore import QUrl, Qt, QPoint
+from PySide6.QtMultimedia import QMediaPlayer, QAudioOutput
 
 from utils.path_manager import GIF_PATH, ICON_PATH, MUSIC_PATH, TITLE
 
@@ -17,7 +17,7 @@ class MainWindow(QMainWindow):
         super().__init__(*args, **kwargs)
 
         # remove default frame
-        self.setWindowFlags(Qt.FramelessWindowHint)
+        self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         self.setFixedSize(520, 560)
 
         # Central Widget & Layout
@@ -30,7 +30,7 @@ class MainWindow(QMainWindow):
         # setting up GIF to application
         self.label = QLabel()
         self.label.setObjectName('GIF')
-        self.label.setAlignment(Qt.AlignHCenter)
+        self.label.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         self.movie = QMovie(str(GIF_PATH))
         self.label.setMovie(self.movie)
         self.movie.start()
@@ -38,7 +38,8 @@ class MainWindow(QMainWindow):
         # add music track
         self.player = QMediaPlayer()
         self.audio_output = QAudioOutput()
-        self.player.setVolume(70)
+        self.player.setAudioOutput(self.audio_output)
+        self.audio_output.setVolume(0.7)
 
         # Custom Title Bar
         self.title_bar = QWidget()
@@ -86,22 +87,23 @@ class MainWindow(QMainWindow):
 
     def play_music(self):
         music_file = QUrl.fromLocalFile(str(MUSIC_PATH))
-        self.player.setMedia(QMediaContent(music_file))
+        music_file_str = str(music_file)
+        self.player.setSource(music_file_str)
         self.player.play()
 
     # === Window Movement Logic ===
     def mousePressEvent(self, event):
-        if event.button() == Qt.LeftButton:
+        if event.button() == Qt.MouseButton.LeftButton:
             # Only drag if click is on the title bar (not on buttons)
             if self.title_bar.geometry().contains(event.pos()):
                 self.dragging = True
-                self.drag_offset = event.globalPos() - self.frameGeometry().topLeft()
+                self.drag_offset = event.globalPosition().toPoint() - self.frameGeometry().topLeft()
                 event.accept()
         super().mousePressEvent(event)
 
     def mouseMoveEvent(self, event):
-        if self.dragging and event.buttons() == Qt.LeftButton:
-            self.move(event.globalPos() - self.drag_offset)
+        if self.dragging and event.buttons() == Qt.MouseButton.LeftButton:
+            self.move(event.globalPosition().toPoint() - self.drag_offset)
             event.accept()
         super().mouseMoveEvent(event)
 

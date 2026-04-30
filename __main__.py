@@ -1,7 +1,7 @@
 import sys
 from pathlib import Path
-from PyQt5.QtGui import QFont, QFontDatabase
-from PyQt5.QtWidgets import QApplication
+from PyQt6.QtGui import QFont, QFontDatabase
+from PyQt6.QtWidgets import QApplication
 
 from utils.path_manager import SCHEME_PATH, FONT_PATH, check_is_valid_pathes
 from widgets.main_window import MainWindow
@@ -28,7 +28,7 @@ def application():
     window.show()
 
     # start up app
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
 
 
 if __name__ == '__main__':
