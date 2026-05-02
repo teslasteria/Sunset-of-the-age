@@ -6,7 +6,10 @@ TITLE = "Sunset of the age"
 BASEDIR_PATH = Path(__file__).resolve().parent.parent
 
 # play icon for title bar
-ICON_PATH = BASEDIR_PATH / 'assets' / 'play_icon.png'
+ICON_PLAY_PATH = BASEDIR_PATH / 'assets' / 'play_icon.png'
+
+# pause icon for title bar
+ICON_PAUSE_PATH = BASEDIR_PATH / 'assets' / 'pause.png'
 
 # main gif onject
 GIF_PATH = BASEDIR_PATH / 'assets' / 'main.gif'
@@ -18,15 +21,15 @@ SCHEME_PATH = BASEDIR_PATH / 'assets' / 'styles' / 'style.qss'
 FONT_PATH = BASEDIR_PATH / 'assets' / 'fonts' / 'PixelOperator.ttf'
 
 # Music file path
-MUSIC_PATH = BASEDIR_PATH / 'assets' / 'bryan-adams-run-to-you.wav'
+MUSIC_PATH = BASEDIR_PATH / 'assets' / 'RunToYou.mp3'
 
 
-def check_icon_path():
+def check_icons_path():
     '''checking valid path to icon'''
-    if ICON_PATH.is_file():
-        return ICON_PATH
+    if ICON_PLAY_PATH.is_file() and ICON_PAUSE_PATH.is_file():
+        return ICON_PLAY_PATH, ICON_PAUSE_PATH
     else:
-        print(f'Icon not found at: {ICON_PATH}')
+        print(f'Icon not found at: {ICON_PLAY_PATH}')
         print(f'Current working directory: {Path.cwd()}')
 
         return None

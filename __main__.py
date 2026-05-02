@@ -3,12 +3,11 @@ from pathlib import Path
 from PyQt5.QtGui import QFont, QFontDatabase
 from PyQt5.QtWidgets import QApplication
 
-from utils.path_manager import SCHEME_PATH, FONT_PATH, check_is_valid_pathes
+from utils.path_manager import SCHEME_PATH, FONT_PATH
 from widgets.main_window import MainWindow
 
 
 def application():
-    check_is_valid_pathes()
 
     # main app point
     app = QApplication(sys.argv)

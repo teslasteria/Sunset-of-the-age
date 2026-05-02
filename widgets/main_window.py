@@ -1,3 +1,5 @@
+import pygame
+
 from PyQt5.QtGui import QMovie, QIcon
 from PyQt5.QtWidgets import (
             QMainWindow, 
@@ -6,15 +8,20 @@ from PyQt5.QtWidgets import (
             QHBoxLayout, 
             QPushButton, 
             QLabel)
-from PyQt5.QtCore import QUrl, Qt, QPoint
-from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer, QAudioOutput
+from PyQt5.QtCore import Qt, QPoint
 
-from utils.path_manager import GIF_PATH, ICON_PATH, MUSIC_PATH, TITLE
+from utils.path_manager import GIF_PATH, ICON_PLAY_PATH, MUSIC_PATH, TITLE, ICON_PAUSE_PATH
 
 
 class MainWindow(QMainWindow):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
+
+        pygame.mixer.init()
+        self.is_playing = False
+
+        self.icon_play = QIcon(str(ICON_PLAY_PATH))
+        self.icon_pause = QIcon(str(ICON_PAUSE_PATH))
 
         # remove default frame
         self.setWindowFlags(Qt.FramelessWindowHint)
@@ -35,11 +42,6 @@ class MainWindow(QMainWindow):
         self.label.setMovie(self.movie)
         self.movie.start()
 
-        # add music track
-        self.player = QMediaPlayer()
-        self.audio_output = QAudioOutput()
-        self.player.setVolume(70)
-
         # Custom Title Bar
         self.title_bar = QWidget()
         self.title_bar.setObjectName('title_bar')
@@ -58,12 +60,11 @@ class MainWindow(QMainWindow):
         self.min_btn.clicked.connect(self.showMinimized)
 
         # Max button
-        self.max_btn = QPushButton()
-        self.max_btn.setIcon(QIcon(str(ICON_PATH)))
-        self.max_btn.setText('')
-        self.max_btn.setFlat(True)
-        self.max_btn.setFixedSize(32, 28)
-        self.max_btn.clicked.connect(self.play_music)
+        self.play_button = QPushButton()
+        self.play_button.setFlat(True)
+        self.play_button.setIcon(self.icon_play)
+        self.play_button.setFixedSize(32, 28)
+        self.play_button.clicked.connect(self.play_music)
 
         # Close button
         self.close_btn = QPushButton("✕")
@@ -74,7 +75,7 @@ class MainWindow(QMainWindow):
         # Adding widgets to the central layout
         title_layout.addWidget(self.title_label, 1)
         title_layout.addWidget(self.min_btn)
-        title_layout.addWidget(self.max_btn)
+        title_layout.addWidget(self.play_button)
         title_layout.addWidget(self.close_btn)  
 
         main_layout.addWidget(self.title_bar)
@@ -85,9 +86,23 @@ class MainWindow(QMainWindow):
         self.drag_offset = QPoint()
 
     def play_music(self):
-        music_file = QUrl.fromLocalFile(str(MUSIC_PATH))
-        self.player.setMedia(QMediaContent(music_file))
-        self.player.play()
+        if self.is_playing:
+            pygame.mixer.music.pause()
+            self.play_button.setIcon(self.icon_play)
+            self.is_playing = False
+        else:
+            # If starting from beginning or resuming
+            if pygame.mixer.music.get_busy():
+                pygame.mixer.music.unpause()
+            else:
+                try:
+                    pygame.mixer.music.load(str(MUSIC_PATH))
+                    pygame.mixer.music.play()
+                except pygame.error as e:
+                    print(f'Loading error: {e}')
+            
+            self.play_button.setIcon(self.icon_pause)
+            self.is_playing = True
 
     # === Window Movement Logic ===
     def mousePressEvent(self, event):
