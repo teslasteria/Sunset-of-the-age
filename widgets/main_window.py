@@ -18,7 +18,9 @@ class MainWindow(QMainWindow):
         super().__init__(*args, **kwargs)
 
         pygame.mixer.init()
+        pygame.mixer.music.load(str(MUSIC_PATH))
         self.is_playing = False
+        self.is_paused = False
 
         self.icon_play = QIcon(str(ICON_PLAY_PATH))
         self.icon_pause = QIcon(str(ICON_PAUSE_PATH))
@@ -87,22 +89,26 @@ class MainWindow(QMainWindow):
 
     def play_music(self):
         if self.is_playing:
+            # Currently playing → Pause it
             pygame.mixer.music.pause()
-            self.play_button.setIcon(self.icon_play)
             self.is_playing = False
+            self.is_paused = True  # Mark as paused
+            self.play_button.setIcon(self.icon_play)
         else:
-            # If starting from beginning or resuming
-            if pygame.mixer.music.get_busy():
+            # Currently not playing → Resume or Start
+            if self.is_paused:
+                # It was paused → Resume from where it left off
                 pygame.mixer.music.unpause()
+                self.is_paused = False
             else:
+                # It was stopped or never started → Play from beginning
                 try:
-                    pygame.mixer.music.load(str(MUSIC_PATH))
                     pygame.mixer.music.play()
                 except pygame.error as e:
                     print(f'Loading error: {e}')
             
-            self.play_button.setIcon(self.icon_pause)
             self.is_playing = True
+            self.play_button.setIcon(self.icon_pause)
 
     # === Window Movement Logic ===
     def mousePressEvent(self, event):
